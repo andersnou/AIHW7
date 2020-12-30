@@ -12,10 +12,11 @@ size = [SCREEN_WIDTH, SCREEN_HEIGHT]
 screen = pygame.display.set_mode(size)
 START_HEIGHT = SCREEN_HEIGHT / 2 - 50
 
+
 class PingPong:
     def __init__(self, screen):
-        self.player_one = Player(screen, 10, START_HEIGHT)
-        self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
+        self.player_one = Player(screen, 10, START_HEIGHT, True)
+        self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT, False)
         self.ball = Ball(screen, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.score = str(self.player_one.score) + ' : ' + str(self.player_two.score)
 
@@ -36,14 +37,16 @@ class PingPong:
                 return True
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self.player_one.move(-MOVE_SIZE, SCREEN_HEIGHT)
-                elif event.key == pygame.K_DOWN:
-                    self.player_one.move(MOVE_SIZE, SCREEN_HEIGHT)
-                elif event.key == pygame.K_w:
-                    self.player_two.move(-MOVE_SIZE, SCREEN_HEIGHT)
-                elif event.key == pygame.K_s:
-                    self.player_two.move(MOVE_SIZE, SCREEN_HEIGHT)
+                if self.player_one.human:
+                    if event.key == pygame.K_UP:
+                        self.player_one.move(-MOVE_SIZE, SCREEN_HEIGHT)
+                    elif event.key == pygame.K_DOWN:
+                        self.player_one.move(MOVE_SIZE, SCREEN_HEIGHT)
+                if self.player_two.human:
+                    if event.key == pygame.K_w:
+                        self.player_two.move(-MOVE_SIZE, SCREEN_HEIGHT)
+                    elif event.key == pygame.K_s:
+                        self.player_two.move(MOVE_SIZE, SCREEN_HEIGHT)
                 elif event.key == pygame.K_r:
                     self.restart_game()
 
@@ -61,7 +64,6 @@ class PingPong:
     def check_collision(self):
         if self.player_one.rect.colliderect(self.ball.rect) or self.player_two.rect.colliderect(self.ball.rect):
             self.ball.direction_x *= -1
-            self.ball.direction_y *= -1
         elif self.ball.y >= SCREEN_HEIGHT or self.ball.y <= 0:
             self.ball.direction_y *= -1
         else:
@@ -95,6 +97,13 @@ class PingPong:
 
         pygame.display.flip()
 
+    def move_ai(self):
+        if not self.player_one.human:
+            self.player_one.move_ai(MOVE_SIZE)
+
+        if not self.player_two.human:
+            self.player_two.move_ai(MOVE_SIZE)
+
 
 def main():
     pygame.init()
@@ -111,7 +120,7 @@ def main():
     while not gameover:
 
         gameover = game.process_events()
-
+        game.move_ai()
 
         game.display_frame()
 
