@@ -1,32 +1,34 @@
-import pygame as pygame
-import random
-
-SCREEN_HEIGHT = 500
-
+import pygame
+import Variables
 
 class Player:
-    def __init__(self, screen, x, y, human):
-        self.x = x
-        self.y = y
+    def __init__(self, screen, player):
+        if player == 1:
+            self.x = 10
+        else:
+            self.x = Variables.SCREEN_WIDTH-10
+        self.y = Variables.START_HEIGHT
         self.color = [0, 0, 0]
         self.length = 100
         self.width = 10
         self.score = 0
+        self.player = player
         self.rect = pygame.draw.rect(screen, self.color, [self.x - 5, self.y, self.width, self.length])
-        self.human = human
+        self.ai = False
 
-    def move_ai(self, move_size):
-        direction = random.randint(-1, 1)
-        self.move(direction*move_size, SCREEN_HEIGHT)
+    def move(self, move, screen_height):
+        move_size = self.get_move_size(move, screen_height)
+        self.move_paddle(move_size)
 
-    def move(self, move_size, screen_height):
-        if self.y + self.length + move_size > screen_height:
+    def get_move_size(self, move, screen_height):
+        if self.y + self.length + move > screen_height:
             diff = screen_height - (self.y + self.length)
-            self.move_paddle(diff)
-        elif self.y + move_size < 0:
-            self.move_paddle(-self.y)
+            return diff
+        elif self.y + move < 0:
+            diff = self.y
+            return diff
         else:
-            self.move_paddle(move_size)
+            return move
 
     def move_paddle(self, move_size):
         self.y += move_size
