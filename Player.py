@@ -1,6 +1,7 @@
 import pygame
 import Variables
 
+
 class Player:
     def __init__(self, screen, player):
         if player == 1:
@@ -16,13 +17,13 @@ class Player:
         self.rect = pygame.draw.rect(screen, self.color, [self.x - 5, self.y, self.width, self.length])
         self.ai = False
 
-    def move(self, move, screen_height):
-        move_size = self.get_move_size(move, screen_height)
+    def move(self, move):
+        move_size = self.get_move_size(move)
         self.move_paddle(move_size)
 
-    def get_move_size(self, move, screen_height):
-        if self.y + self.length + move > screen_height:
-            diff = screen_height - (self.y + self.length)
+    def get_move_size(self, move):
+        if self.y + self.length + move > Variables.SCREEN_HEIGHT:
+            diff = Variables.SCREEN_HEIGHT - (self.y + self.length)
             return diff
         elif self.y + move < 0:
             diff = self.y

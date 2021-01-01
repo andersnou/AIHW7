@@ -1,5 +1,5 @@
 import pygame
-
+import Variables
 
 BALL_SIZE = 5
 
@@ -10,13 +10,13 @@ class Ball:
         self.y = y
         self.color = [0, 0, 0]
         self.size = BALL_SIZE
-        self.direction_x = -1  # -1 on vasakule ja 1 on paremale
+        self.direction_x = 1  # -1 on vasakule ja 1 on paremale
         self.direction_y = -1  # -1 on üles ja 1 on alla
         self.rect = pygame.draw.circle(screen, self.color, [self.x, self.y], self.size)
 
-    def move(self, move_x, move_y):
-        self.x += self.direction_x * move_x
-        self.y += self.direction_y * move_y
+    def move(self):
+        self.x += self.direction_x * Variables.BALL_SPEED
+        self.y += self.direction_y * Variables.BALL_SPEED
 
     def reset(self, x, y):
         self.x = x

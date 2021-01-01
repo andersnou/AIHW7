@@ -7,13 +7,15 @@ class TrackingAI(Player):
         self.ai = True
         self.ball = ball
 
-    def move(self, move, screen_height):
+    def move(self, move):
         direction = self.get_direction()
-        move_size = self.get_move_size(direction*move, screen_height)
+        move_size = self.get_move_size(direction*move)
         self.move_paddle(move_size)
 
     def get_direction(self):
         paddle_center = self.y + (self.length / 2)
         if self.ball.y > paddle_center:
             return 1
-        return -1
+        elif self.ball.y < paddle_center:
+            return -1
+        return 0

@@ -7,9 +7,9 @@ class RandomAI(Player):
         super().__init__(screen, player)
         self.ai = True
 
-    def move(self, move, screen_height):
+    def move(self, move):
         direction = self.get_direction()
-        move_size = self.get_move_size(direction*move, screen_height)
+        move_size = self.get_move_size(direction*move)
         self.move_paddle(move_size)
 
     def get_direction(self):

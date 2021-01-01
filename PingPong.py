@@ -9,21 +9,25 @@ screen = pygame.display.set_mode(Variables.size)
 
 
 class PingPong:
-    def __init__(self, screen):
+    def __init__(self, screen, player_two):
         self.ball = Ball(screen, Variables.SCREEN_WIDTH/2, Variables.SCREEN_HEIGHT/2)
-        self.player_one = Player(screen, 1)
+        #self.player_one = Player(screen, 1)
         #self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
-        #self.player_one = RandomAI(screen, 1)
-        self.player_two = TrackingAI(screen, 2, self.ball)
+        self.player_one = RandomAI(screen, 1)
+        #self.player_two = TrackingAI(screen, 2, self.ball)
+        self.player_two = player_two
         self.score = str(self.player_one.score) + ' : ' + str(self.player_two.score)
+        self.last_winner = 0
 
     def is_game_over(self):
         if self.ball.x <= 0:
             self.player_two.score += 1
+            self.last_winner = 2
             print("Player two wins")
             return True
         elif self.ball.x >= Variables.SCREEN_WIDTH:
             self.player_one.score += 1
+            self.last_winner = 1
             print("Player one wins")
             return True
         else:
@@ -38,14 +42,14 @@ class PingPong:
             if event.type == pygame.KEYDOWN:
                 if not self.player_one.ai:
                     if event.key == pygame.K_UP:
-                        self.player_one.move(-Variables.MOVE_SIZE, Variables.SCREEN_HEIGHT)
+                        self.player_one.move(-Variables.MOVE_SIZE)
                     elif event.key == pygame.K_DOWN:
-                        self.player_one.move(Variables.MOVE_SIZE, Variables.SCREEN_HEIGHT)
+                        self.player_one.move(Variables.MOVE_SIZE)
                 if not self.player_two.ai:
                     if event.key == pygame.K_w:
-                        self.player_two.move(-Variables.MOVE_SIZE, Variables.SCREEN_HEIGHT)
+                        self.player_two.move(-Variables.MOVE_SIZE)
                     elif event.key == pygame.K_s:
-                        self.player_two.move(Variables.MOVE_SIZE, Variables.SCREEN_HEIGHT)
+                        self.player_two.move(Variables.MOVE_SIZE)
                 elif event.key == pygame.K_r:
                     self.restart_game()
 
@@ -70,7 +74,7 @@ class PingPong:
 
     def move_ball(self):
         self.check_collision()
-        self.ball.move(Variables.BALL_SPEED, Variables.BALL_SPEED)
+        self.ball.move()
 
     def draw_sprites(self):
         self.player_one.draw(screen)
@@ -98,9 +102,9 @@ class PingPong:
 
     def move_ai(self):
         if self.player_one.ai:
-            self.player_one.move(Variables.MOVE_SIZE, Variables.SCREEN_HEIGHT)
+            self.player_one.move(Variables.MOVE_SIZE)
         if self.player_two.ai:
-            self.player_two.move(Variables.MOVE_SIZE, Variables.SCREEN_HEIGHT)
+            self.player_two.move(Variables.MOVE_SIZE)
 
 
 def main():
