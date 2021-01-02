@@ -4,19 +4,21 @@ from Player import Player
 from RandomAI import RandomAI
 from TrackingAI import TrackingAI
 from TrainingBot import TrainingBot
+from AILabelled import AILabelled
 import Variables
 
 screen = pygame.display.set_mode(Variables.size)
 
 
 class PingPong:
-    def __init__(self, screen, player_two):
-        self.ball = Ball(screen, Variables.SCREEN_WIDTH/2, Variables.SCREEN_HEIGHT/2)
-        #self.player_one = Player(screen, 1)
-        #self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
-        #self.player_one = RandomAI(screen, 1)
+    def __init__(self, screen):
+        self.ball = Ball(screen, Variables.SCREEN_WIDTH / 2, Variables.SCREEN_HEIGHT / 2)
+        # self.player_one = Player(screen, 1)
+        # self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
+        # self.player_one = RandomAI(screen, 1)
         self.player_one = TrainingBot(screen, 1, self.ball)
-        #self.player_two = TrackingAI(screen, 2, self.ball)
+        # self.player_two = TrackingAI(screen, 2, self.ball)
+        player_two = AILabelled(screen, Variables.SCREEN_WIDTH - 10, self.ball)
         self.player_two = player_two
         self.score = str(self.player_one.score) + ' : ' + str(self.player_two.score)
         self.last_winner = 0
@@ -28,6 +30,7 @@ class PingPong:
             print("Player two wins")
             return True
         elif self.ball.x >= Variables.SCREEN_WIDTH:
+            self.player_two.train()
             self.player_one.score += 1
             self.last_winner = 1
             print("Player one wins")
@@ -62,8 +65,8 @@ class PingPong:
 
     def restart_game(self):
         self.player_one.reset(10, Variables.START_HEIGHT)
-        self.player_two.reset(Variables.SCREEN_WIDTH-10, Variables.START_HEIGHT)
-        self.ball.reset(Variables.SCREEN_WIDTH/2, Variables.SCREEN_HEIGHT/2)
+        self.player_two.reset(Variables.SCREEN_WIDTH - 10, Variables.START_HEIGHT)
+        self.ball.reset(Variables.SCREEN_WIDTH / 2, Variables.SCREEN_HEIGHT / 2)
         self.update_score()
 
     def check_collision(self):
@@ -116,8 +119,8 @@ def main():
     pygame.mouse.set_visible(False)
 
     clock = pygame.time.Clock()
-    player_two = Player(screen, Variables.SCREEN_WIDTH-10)
-    game = PingPong(screen, player_two)
+    # player_two = ModelAI(screen, Variables.SCREEN_WIDTH-10)
+    game = PingPong(screen)
 
     gameover = False
 
@@ -132,5 +135,6 @@ def main():
 
         if game.is_game_over():
             game.restart_game()
+
 
 main()
