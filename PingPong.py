@@ -3,6 +3,7 @@ from Ball import Ball
 from Player import Player
 from RandomAI import RandomAI
 from TrackingAI import TrackingAI
+from TrainingBot import TrainingBot
 import Variables
 
 screen = pygame.display.set_mode(Variables.size)
@@ -13,7 +14,8 @@ class PingPong:
         self.ball = Ball(screen, Variables.SCREEN_WIDTH/2, Variables.SCREEN_HEIGHT/2)
         #self.player_one = Player(screen, 1)
         #self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
-        self.player_one = RandomAI(screen, 1)
+        #self.player_one = RandomAI(screen, 1)
+        self.player_one = TrainingBot(screen, 1, self.ball)
         #self.player_two = TrackingAI(screen, 2, self.ball)
         self.player_two = player_two
         self.score = str(self.player_one.score) + ' : ' + str(self.player_two.score)
@@ -114,8 +116,8 @@ def main():
     pygame.mouse.set_visible(False)
 
     clock = pygame.time.Clock()
-
-    game = PingPong(screen)
+    player_two = Player(screen, Variables.SCREEN_WIDTH-10)
+    game = PingPong(screen, player_two)
 
     gameover = False
 
