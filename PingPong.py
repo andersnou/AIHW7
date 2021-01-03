@@ -133,11 +133,6 @@ class PingPong:
                 self.player_one = TrainingBot(screen, player, self.ball)
             else:
                 self.player_two = TrainingBot(screen, player, self.ball)
-        elif input == "reward ai":
-            if player == 1:
-                self.player_one = ActionAI(screen, player, self.ball)
-            else:
-                self.player_two = ActionAI(screen, player, self.ball)
         else:
             if player == 1:
                 self.player_one = Player(screen, player, self.ball)
@@ -146,7 +141,7 @@ class PingPong:
 
 
 def choose_players():
-    players = ["Random AI", "Tracking AI", "Labelled AI", "Reward AI", "Human", "Training Bot"]
+    players = ["Random AI", "Tracking AI", "Labelled AI", "Human", "Training Bot"]
     print("Choose players...")
     for i in range(len(players)):
         print(str(i+1) + ")", players[i])

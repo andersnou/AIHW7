@@ -60,14 +60,11 @@ def main():
             env.process_events()
             env.player_one.move(Variables.MOVE_SIZE)
             env.player_two.move_action(action)
-            #env.move_ball()
             env.display_frame()
 
 
             input_t = np.zeros((1, 4))
             input_t[0] = np.array([env.player_two.x, env.player_two.y, env.ball.x, env.ball.y])
-
-            #print("Action:", action)
 
             clock.tick(Variables.GAME_SPEED)
             hit_cord = env.ball.calculate_ball_hit_y()

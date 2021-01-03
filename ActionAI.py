@@ -1,13 +1,9 @@
 from Player import Player
-import Variables
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, Flatten, Input, Conv2D
 from keras.optimizers import RMSprop
-from PingPong import PingPong
 import Variables
-import pygame
 import numpy as np
-import json
 
 class ActionAI(Player):
     def __init__(self, screen, player, ball):
@@ -33,6 +29,7 @@ class ActionAI(Player):
         input_t[0] = np.array([self.x, self.y, self.ball.x, self.ball.y])
 
         q = self.model.predict(input_t)
+        print(q)
         action = np.argmax(q[0])  # 0, 1 voi 2
         return action
 
@@ -47,8 +44,12 @@ class ActionAI(Player):
         elif action == 2:
             move_size = self.get_move_size(-Variables.MOVE_SIZE)
             self.move_paddle(move_size)
-        else:
-            pass
+
+        input_t = np.zeros((1, 4))
+        input_t[0] = np.array([self.x, self.y, self.ball.x, self.ball.y])
+        tar = self.get_target(input_t, False)
+        self.model.fit(input_t, [[tar]])
+
 
     def move_action(self, action):
         # 0 - ei tee midagi
@@ -67,4 +68,21 @@ class ActionAI(Player):
         if self.rect.colliderect(self.ball.rect):
             return True
         return False
+
+    def get_target(self, input, target):
+        discount = 0.9
+        print(input)
+        state_t = input[0]
+        action_t = input[1]
+        reward_t = input[2]
+        state_tp1 = input[3]
+        tar = self.model.predict(input)[0]
+        Q_sa = np.max(self.model.predict(state_tp1)[0])
+        if target:  # if game_over is True
+            tar = reward_t
+        else:
+            # reward_t + gamma * max_a' Q(s', a')
+            tar = reward_t + discount * Q_sa
+
+        return tar
 
