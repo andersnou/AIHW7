@@ -9,10 +9,9 @@ import numpy as np
 
 class AILabelled(Player):
     def __init__(self, screen, player, ball):
-        super().__init__(screen, player)
+        super().__init__(screen, player, ball)
         self.ai = True
         self.model = self.create_model()
-        self.ball = ball
 
     def create_model(self):
         model2 = Sequential()

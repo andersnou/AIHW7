@@ -13,25 +13,30 @@ screen = pygame.display.set_mode(Variables.size)
 
 
 class PingPong:
-    def __init__(self, screen):
+    def __init__(self, screen, player_one, player_two):
         self.ball = Ball(screen, Variables.SCREEN_WIDTH/2, Variables.SCREEN_HEIGHT/2)
+        self.check_input(1, player_one)
+        self.check_input(2, player_two)
         #self.player_one = Player(screen, 1, self.ball)
         #self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
-        self.player_one = RandomAI(screen, 1, self.ball)
+        #self.player_one = RandomAI(screen, 1, self.ball)
         #self.player_two = TrackingAI(screen, 2, self.ball)
-        self.player_two = ActionAI(screen, 2, self.ball)
+        #self.player_two = AILabelled(screen, 2, self.ball)
         self.score = str(self.player_one.score) + ' : ' + str(self.player_two.score)
         self.last_winner = 0
 
     def is_game_over(self):
         if self.ball.x <= 0:
             self.player_two.score += 1
+            if type(self.player_one) == AILabelled:
+                self.player_one.train()
             self.last_winner = 2
             print("Player two wins")
             return True
         elif self.ball.x >= Variables.SCREEN_WIDTH:
-            self.player_two.train()
             self.player_one.score += 1
+            if type(self.player_two) == AILabelled:
+                self.player_two.train()
             self.last_winner = 1
             print("Player one wins")
             return True
@@ -70,21 +75,12 @@ class PingPong:
         self.update_score()
 
     def check_collision(self):
-        random_number = random.randint(1, 10)
-        random_number = random_number / 100
-        random_number2 = random.randint(1, 10)
-        random_number2 = random_number2 / 100
-
-        #print(self.ball.direction_x)
-        #print(self.ball.direction_y)
         if self.player_one.rect.colliderect(self.ball.rect) or self.player_two.rect.colliderect(self.ball.rect):
-            self.ball.direction_x *= -1 + random_number
-            self.ball.direction_y *= 1 + random_number2
-            #self.ball.move()
+            self.ball.direction_x *= -1
+            self.ball.direction_y *= 1
         elif self.ball.y >= Variables.SCREEN_HEIGHT or self.ball.y <= 0:
-            self.ball.direction_y *= -1 + random_number
-            self.ball.direction_x *= 1 + random_number2
-            #self.ball.move()
+            self.ball.direction_y *= -1
+            self.ball.direction_x *= 1
         else:
             return False
 
@@ -122,6 +118,45 @@ class PingPong:
         if self.player_two.ai:
             self.player_two.move(Variables.MOVE_SIZE)
 
+    def check_input(self, player, input):
+        if input == "random ai":
+            if player == 1:
+                self.player_one = RandomAI(screen, player, self.ball)
+            else:
+                self.player_two = RandomAI(screen, player, self.ball)
+        elif input == "tracking ai":
+            if player == 1:
+                self.player_one = TrackingAI(screen, player, self.ball)
+            else:
+                self.player_two = TrackingAI(screen, player, self.ball)
+        elif input == "rl ai":
+            if player == 1:
+                self.player_one = AILabelled(screen, player, self.ball)
+            else:
+                self.player_two = AILabelled(screen, player, self.ball)
+        elif input == "training bot":
+            if player == 1:
+                self.player_one = TrainingBot(screen, player, self.ball)
+            else:
+                self.player_two = TrainingBot(screen, player, self.ball)
+        else:
+            if player == 1:
+                self.player_one = Player(screen, player, self.ball)
+            else:
+                self.player_two = Player(screen, player, self.ball)
+
+
+def choose_players():
+    players = ["Random AI", "Tracking AI", "RL AI", "Human", "Training Bot"]
+    print("Choose players...")
+    for i in range(len(players)):
+        print(str(i+1) + ")", players[i])
+    print("Player one: ")
+    player_one = input()
+    print("Player two: ")
+    player_two = input()
+    return player_one.lower(), player_two.lower()
+
 
 def main():
     pygame.init()
@@ -130,8 +165,9 @@ def main():
     pygame.mouse.set_visible(False)
 
     clock = pygame.time.Clock()
-    # player_two = ModelAI(screen, Variables.SCREEN_WIDTH-10)
-    game = PingPong(screen)
+    player_one, player_two = choose_players()
+
+    game = PingPong(screen, player_one, player_two)
 
     gameover = False
 
