@@ -4,18 +4,20 @@ from Player import Player
 from RandomAI import RandomAI
 from TrackingAI import TrackingAI
 import Variables
+from ActionAI import ActionAI
+import random
 
 screen = pygame.display.set_mode(Variables.size)
 
 
 class PingPong:
-    def __init__(self, screen, player_two):
+    def __init__(self, screen):
         self.ball = Ball(screen, Variables.SCREEN_WIDTH/2, Variables.SCREEN_HEIGHT/2)
-        #self.player_one = Player(screen, 1)
+        #self.player_one = Player(screen, 1, self.ball)
         #self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
-        self.player_one = RandomAI(screen, 1)
+        self.player_one = RandomAI(screen, 1, self.ball)
         #self.player_two = TrackingAI(screen, 2, self.ball)
-        self.player_two = player_two
+        self.player_two = ActionAI(screen, 2, self.ball)
         self.score = str(self.player_one.score) + ' : ' + str(self.player_two.score)
         self.last_winner = 0
 
@@ -65,10 +67,21 @@ class PingPong:
         self.update_score()
 
     def check_collision(self):
+        random_number = random.randint(1, 10)
+        random_number = random_number / 100
+        random_number2 = random.randint(1, 10)
+        random_number2 = random_number2 / 100
+
+        #print(self.ball.direction_x)
+        #print(self.ball.direction_y)
         if self.player_one.rect.colliderect(self.ball.rect) or self.player_two.rect.colliderect(self.ball.rect):
-            self.ball.direction_x *= -1
+            self.ball.direction_x *= -1 + random_number
+            self.ball.direction_y *= 1 + random_number2
+            #self.ball.move()
         elif self.ball.y >= Variables.SCREEN_HEIGHT or self.ball.y <= 0:
-            self.ball.direction_y *= -1
+            self.ball.direction_y *= -1 + random_number
+            self.ball.direction_x *= 1 + random_number2
+            #self.ball.move()
         else:
             return False
 
@@ -131,4 +144,4 @@ def main():
         if game.is_game_over():
             game.restart_game()
 
-main()
+#main()

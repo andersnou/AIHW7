@@ -3,7 +3,7 @@ import Variables
 
 
 class Player:
-    def __init__(self, screen, player):
+    def __init__(self, screen, player, ball):
         if player == 1:
             self.x = 10
         else:
@@ -16,6 +16,7 @@ class Player:
         self.player = player
         self.rect = pygame.draw.rect(screen, self.color, [self.x - 5, self.y, self.width, self.length])
         self.ai = False
+        self.ball = ball
 
     def move(self, move):
         move_size = self.get_move_size(move)

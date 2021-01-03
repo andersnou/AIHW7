@@ -3,8 +3,8 @@ from Player import Player
 
 
 class RandomAI(Player):
-    def __init__(self, screen, player):
-        super().__init__(screen, player)
+    def __init__(self, screen, player, ball):
+        super().__init__(screen, player, ball)
         self.ai = True
 
     def move(self, move):

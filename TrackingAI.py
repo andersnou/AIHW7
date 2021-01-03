@@ -3,9 +3,8 @@ from Player import Player
 
 class TrackingAI(Player):
     def __init__(self, screen, player, ball):
-        super().__init__(screen, player)
+        super().__init__(screen, player, ball)
         self.ai = True
-        self.ball = ball
 
     def move(self, move):
         direction = self.get_direction()
