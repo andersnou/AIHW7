@@ -29,7 +29,7 @@ def main():
 
     #model.load_weights("model.h5")
     screen = pygame.display.set_mode(Variables.size)
-    env = PingPong(screen)
+    env = PingPong(screen, "random ai", "reward ai")
     pygame.init()
     pygame.display.set_caption("Ping pong")
     pygame.mouse.set_visible(False)
@@ -37,7 +37,7 @@ def main():
 
     win_count = 0
 
-    for i in range(250):
+    for i in range(100):
         env.restart_game()
         loss = 0.0
         gameover = False

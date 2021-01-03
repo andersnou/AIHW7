@@ -1,10 +1,9 @@
 from Player import Player
-from Ball import Ball
 
 
 class TrainingBot(Player):
     def __init__(self, screen, player, ball):
-        super().__init__(screen, player)
+        super().__init__(screen, player, ball)
         self.ai = True
         self.ball = ball
 

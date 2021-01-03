@@ -7,7 +7,6 @@ from TrainingBot import TrainingBot
 from AILabelled import AILabelled
 import Variables
 from ActionAI import ActionAI
-import random
 
 screen = pygame.display.set_mode(Variables.size)
 
@@ -17,11 +16,6 @@ class PingPong:
         self.ball = Ball(screen, Variables.SCREEN_WIDTH/2, Variables.SCREEN_HEIGHT/2)
         self.check_input(1, player_one)
         self.check_input(2, player_two)
-        #self.player_one = Player(screen, 1, self.ball)
-        #self.player_two = Player(screen, SCREEN_WIDTH-10, START_HEIGHT)
-        #self.player_one = RandomAI(screen, 1, self.ball)
-        #self.player_two = TrackingAI(screen, 2, self.ball)
-        #self.player_two = AILabelled(screen, 2, self.ball)
         self.score = str(self.player_one.score) + ' : ' + str(self.player_two.score)
         self.last_winner = 0
 
@@ -129,7 +123,7 @@ class PingPong:
                 self.player_one = TrackingAI(screen, player, self.ball)
             else:
                 self.player_two = TrackingAI(screen, player, self.ball)
-        elif input == "rl ai":
+        elif input == "labelled ai":
             if player == 1:
                 self.player_one = AILabelled(screen, player, self.ball)
             else:
@@ -139,6 +133,11 @@ class PingPong:
                 self.player_one = TrainingBot(screen, player, self.ball)
             else:
                 self.player_two = TrainingBot(screen, player, self.ball)
+        elif input == "reward ai":
+            if player == 1:
+                self.player_one = ActionAI(screen, player, self.ball)
+            else:
+                self.player_two = ActionAI(screen, player, self.ball)
         else:
             if player == 1:
                 self.player_one = Player(screen, player, self.ball)
@@ -147,7 +146,7 @@ class PingPong:
 
 
 def choose_players():
-    players = ["Random AI", "Tracking AI", "RL AI", "Human", "Training Bot"]
+    players = ["Random AI", "Tracking AI", "Labelled AI", "Reward AI", "Human", "Training Bot"]
     print("Choose players...")
     for i in range(len(players)):
         print(str(i+1) + ")", players[i])

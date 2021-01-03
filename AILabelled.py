@@ -20,16 +20,7 @@ class AILabelled(Player):
         model2.add(Dense(24, activation="relu"))
         model2.add(Dense(24, activation="relu"))
         model2.add(Dense(1, activation="linear"))
-        """
-        input_layer = Input(shape=(2,))
-        conv = Conv2D(filters=32, kernel_size=3, activation="relu")(input_layer)
-        dropout = Dropout(0.2)(conv)
-        flatten = Flatten()(dropout)
-        dense_1 = Dense(units=32, activation="relu")(flatten)
-        dense_2 = Dense(units=32, activation="relu")(dense_1)
-        output = Dense(units=1, activation="linear", name="output")(dense_2)
-        model = Model(inputs=input_layer, outputs=[output])
-"""
+
         model2.compile(optimizer=Adam(lr=0.001),
                        loss="mse")
         return model2
